@@ -3,7 +3,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const { table } = require('table');
 const inquirer = require('inquirer');
-const { text } = require('stream/consumers');
+
 
 
 const PORT = process.env.PORT || 3001;
@@ -68,9 +68,38 @@ function init(){
                 {
                     type: 'list',
                     name: 'employee_role',
-                    message: "What is the employees role?"
+                    message: "What is the employees role?",
+                    choices:[
+                        "Sales Lead",
+                        "Sales Person",
+                        "Lead Engineer",
+                        "Software Engineer",
+                        "Account Manager",
+                        "Accountant",
+                        "Legal Team Lead",
+                        "Lawyer"
+                    ]
+                },
+                {
+                    type: 'list',
+                    name:'employee_manager',
+                    message: "Who is the employee's manager",
+                    choices: [
+                        "none",
+                        "John Doe",
+                        "Ashley Rodriguez",
+                        "Kunal Singh",
+                        "Sarah Lourd"
+                    ]
                 }
-            ])
+            ]).then((ans) => {
+                db.query('INSERT INTO employees (first_name,last_name) VALUES (?,?)',[ans.first_name,ans.last_name], function (err, results) {
+                    if (err) throw err;
+                    console.log(results);
+                    console.log("Employee Added!");
+                    init();
+                  });
+            });
         }
      })
     .catch((error) => {
