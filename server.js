@@ -44,6 +44,7 @@ function init(){
                "Quit"
             ]
 
+
         }
     ])
     .then((ans) => {
@@ -70,14 +71,38 @@ function init(){
                     name: 'employee_role',
                     message: "What is the employees role?",
                     choices:[
-                        "Sales Lead",
-                        "Sales Person",
-                        "Lead Engineer",
-                        "Software Engineer",
-                        "Account Manager",
-                        "Accountant",
-                        "Legal Team Lead",
-                        "Lawyer"
+                    {
+                        name: "Sales Lead",
+                        value: 1
+                    },
+                    {
+                        name: "Sales Person",
+                        value: 2
+                    },
+                    {
+                        name: "Lead Engineer",
+                        value: 3
+                    },          
+                    {
+                        name: "Software Engineer",
+                        value: 4
+                    },
+                    {
+                        name: "Account Manager",
+                        value: 5
+                    },
+                    {
+                        name: "Accountant",
+                        value: 6
+                    },
+                    {
+                        name: "Legal Team Lead",
+                        value: 7
+                    },
+                    {
+                        name: "Lawyer",
+                        value: 8
+                    }
                     ]
                 },
                 {
@@ -85,17 +110,32 @@ function init(){
                     name:'employee_manager',
                     message: "Who is the employee's manager",
                     choices: [
-                        "none",
-                        "John Doe",
-                        "Ashley Rodriguez",
-                        "Kunal Singh",
-                        "Sarah Lourd"
+                        {   
+                            name: "none",
+                            value: null
+                        },
+                        {
+                            name: "John Doe",
+                            value: 1
+                        },
+                        {
+                            name: "Ashley Rodriguez",
+                            value: 2
+                        },
+                        {
+                            name: "Kunal Singh",
+                            value: 3
+                        },
+                        {
+                            name:"Sarah Lourd",
+                            value: 4
+                        }
                     ]
                 }
             ]).then((ans) => {
-                db.query('INSERT INTO employees (first_name,last_name) VALUES (?,?)',[ans.first_name,ans.last_name], function (err, results) {
+                db.query('INSERT INTO employees (first_name,last_name,role_id,manager_id) VALUES (?,?,?,?)',[ans.first_name,ans.last_name,ans.employee_role.value, ans.employee_manager.value], function (err, results) {
                     if (err) throw err;
-                    console.log(results);
+                    console.log(ans.employee_manager.value);
                     console.log("Employee Added!");
                     init();
                   });
