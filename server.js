@@ -68,7 +68,7 @@ function init(){
                 },
                 {
                     type: 'list',
-                    name: 'employee_role',
+                    name: 'role_id',
                     message: "What is the employees role?",
                     choices:[
                     {
@@ -107,7 +107,7 @@ function init(){
                 },
                 {
                     type: 'list',
-                    name:'employee_manager',
+                    name:'manager_id',
                     message: "Who is the employee's manager",
                     choices: [
                         {   
@@ -133,9 +133,8 @@ function init(){
                     ]
                 }
             ]).then((ans) => {
-                db.query('INSERT INTO employees (first_name,last_name,role_id,manager_id) VALUES (?,?,?,?)',[ans.first_name,ans.last_name,ans.employee_role.value, ans.employee_manager.value], function (err, results) {
+                db.query('INSERT INTO employees (first_name,last_name,role_id,manager_id) VALUES (?,?,?,?)',[ans.first_name,ans.last_name,ans.role_id, ans.manager_id], function (err, results) {
                     if (err) throw err;
-                    console.log(ans.employee_manager.value);
                     console.log("Employee Added!");
                     init();
                   });
