@@ -3,6 +3,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const { table } = require('table');
 const inquirer = require('inquirer');
+const e = require('express');
 
 
 
@@ -120,15 +121,15 @@ function init(){
                         },
                         {
                             name: "Ashley Rodriguez",
-                            value: 2
-                        },
-                        {
-                            name: "Kunal Singh",
                             value: 3
                         },
                         {
+                            name: "Kunal Singh",
+                            value: 5
+                        },
+                        {
                             name:"Sarah Lourd",
-                            value: 4
+                            value: 7
                         }
                     ]
                 }
@@ -139,6 +140,80 @@ function init(){
                     init();
                   });
             });
+        }
+        else if (ans.choice === "View All Departments"){
+            db.query('SELECT * FROM department', function (err, results) {
+                if (err) throw err;
+                console.table(results);
+                init();
+              });
+        }
+        else if(ans.choice === "Add Department"){
+            inquirer.prompt(
+                {
+                    type: "text",
+                    name: "name",
+                    message:"What is the Department name?"
+                }).then((ans) => {
+                db.query('INSERT INTO department (name) VALUES (?)',[ans.name], function (err, results) {
+                    if (err) throw err;
+                    console.log("Departemt Added!");
+                    init();
+                });
+            });
+        }
+        else if (ans.choice === "View All Roles") {
+            db.query('SELECT title, salary FROM role', function (err, results) {
+                if (err) throw err;
+                console.table(results);
+                init();
+              });
+        }
+        else if (ans.choice === "Add Role"){
+            inquirer.prompt([
+                {
+                    type: "text",
+                    name: "title",
+                    message:"What is the name of the role?"
+                },
+                {
+                    type: "text",
+                    name: "salary",
+                    message:"What is the salary of the role?"
+                },
+                {
+                    type: "list",
+                    name: "department_id",
+                    message: "Which department does the role belong to?",
+                    choices: [
+                        {
+                            name: "Sales",
+                            value: 1
+                        },
+                        {
+                            name: "Engineering",
+                            value: 2
+                        },
+                        {
+                            name: "Finance",
+                            value: 3
+                        },
+                        {
+                            name: "Legal",
+                            value: 4
+                        }
+                    ]
+                }
+            ]).then((ans) => {
+                db.query('INSERT INTO role (title,salary,department_id) VALUES (?,?,?)',[ans.title, ans.salary, ans.department_id], function (err, results) {
+                    if (err) throw err;
+                    console.log("Role Added!");
+                    init();
+                });
+            });
+        }
+        else if (ans.choice === "Update Employee Role"){
+            
         }
      })
     .catch((error) => {
