@@ -28,6 +28,20 @@ const db = mysql.createConnection(
 );
 
 function init(){
+    let employeeChoices = [];
+        db.query('SELECT first_name, last_name FROM employees', function (err, results) {
+                if (err) throw err;
+                for (let i = 0; i < results.length; i++) {
+                employeeChoices.push(results[i].first_name + " " + results[i].last_name);
+                } 
+              });
+    let roleChoices = [];
+            db.query('SELECT title FROM role', function (err, results) {
+                if (err) throw err;
+                for (let i = 0; i < results.length; i++) {
+                roleChoices.push(results[i].title);
+                } 
+              });
     inquirer
     .prompt([
         {
@@ -214,6 +228,38 @@ function init(){
         }
         else if (ans.choice === "Update Employee Role"){
             
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "employee",
+                    message: "Which employees role do you want to update?",
+                    choices: employeeChoices
+                },
+                {
+                    type: "list",
+                    name: "new_role",
+                    message: "Which role do you want to assign the selected employee?",
+                    choices: roleChoices
+                }
+            ]).then((ans) => {
+                let chosenEmployeeId = 0;
+                let chosenRoleId = 0;
+                for (let i = 0; i < employeeChoices.length; i++) {
+                    if (employeeChoices[i] === ans.employee){
+                        chosenEmployeeId = i + 1;
+                    }                   
+                };
+                for (let i = 0; i < roleChoices.length; i++) {
+                    if (roleChoices[i] === ans.new_role){
+                        chosenRoleId = i + 1;
+                    }                   
+                }
+                db.query('UPDATE employees SET role_id = ? WHERE id = ?',[chosenRoleId,chosenEmployeeId], function (err, results) {
+                    if (err) throw err;
+                    console.log("Updated Employee's Role!");
+                    init();
+                  });
+            });
         }
      })
     .catch((error) => {
