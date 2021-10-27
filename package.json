@@ -20,6 +20,7 @@
   "homepage": "https://github.com/mshifflette/employee-tracker#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "figlet": "^1.5.2",
     "inquirer": "^8.2.0",
     "mysql2": "^2.3.2",
     "table": "^6.7.2"

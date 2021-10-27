@@ -1,9 +1,9 @@
 const express = require('express');
 // Import and require mysql2
 const mysql = require('mysql2');
-const { table } = require('table');
 const inquirer = require('inquirer');
-const e = require('express');
+const figlet = require('figlet');
+
 
 
 
@@ -24,10 +24,19 @@ const db = mysql.createConnection(
     password: 'password',
     database: 'mycompany_db'
   },
-  console.log(`Connected to the mycompany_db database.`)
 );
-
+// function fig(){
+//     figlet('Employee Manager', function(err, data) {
+//         if (err) {
+//             console.log('Something went wrong...');
+//             console.dir(err);
+//             return;
+//         }
+//         console.log(data)
+//     });          
+// }
 function init(){
+   
     let employeeChoices = [];
         db.query('SELECT first_name, last_name FROM employees', function (err, results) {
                 if (err) throw err;
@@ -42,8 +51,10 @@ function init(){
                 roleChoices.push(results[i].title);
                 } 
               });
+            //   fig()
     inquirer
     .prompt([
+        
         {
             type: 'list',
             name: 'choice',
@@ -260,6 +271,10 @@ function init(){
                     init();
                   });
             });
+        }
+        else if (ans.choice === "Quit"){
+            console.log("Goodbye")
+            process.exit();
         }
      })
     .catch((error) => {
